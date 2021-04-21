@@ -19,7 +19,7 @@ Socket::Socket(const char *port) : _recv_bytes(0), _sent_bytes(0), _recv_cnt(0),
 	// 	throw(Error("fcntl returned -1"));
 	memset(&_addr, 0, sizeof(_addr));
 	_addr.sin_family = AF_INET;
-	_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
 	_addr.sin_port = htons(ft::atoi(port));
 	time(&_start_time);
 	time(&_last_action);
@@ -32,7 +32,7 @@ Socket::Socket(unsigned short port) : _recv_bytes(0), _sent_bytes(0), _recv_cnt(
 		throw(Error("fcntl returned -1"));
 	memset(&_addr, 0, sizeof(_addr));
 	_addr.sin_family = AF_INET;
-	_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
 	_addr.sin_port = port;
 	time(&_start_time);
 	time(&_last_action);
