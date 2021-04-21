@@ -322,7 +322,7 @@ void		IrcServer::fd_event_loop()
 		throw (Error(strerror(errno)));
 	else if (fd_num != 0)
 	{
-		for (int i = 0; i < _fd_max + 1; i++)
+		for (int i = 3; i < _fd_max + 1; i++)
 		{
 			if (FD_ISSET(i, &fds))
 			{
