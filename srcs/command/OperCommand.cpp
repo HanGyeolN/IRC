@@ -1,5 +1,4 @@
 #include "OperCommand.hpp"
-#include "ft_irc.hpp"
 
 // 1. 에러처리 필요
 // 1-1. 패스워드 불일치
@@ -15,8 +14,10 @@ void	OperCommand::run(IrcServer &irc)
 	
 
 	socket = irc.get_current_socket();
-	if (socket->get_type() == UNKNOWN || socket->get_type() == SERVER)
+	if (socket->get_type() == UNKNOWN)
 		throw (Reply(ERR::NOTREGISTERED()));
+	else if (socket->get_type() == SERVER)
+		return ;
 	if (_msg.get_param_size() != 2)
 		throw (Reply(ERR::NEEDMOREPARAMS(), _msg.get_command()));
 	member = irc.find_member(socket->get_fd());
@@ -47,15 +48,4 @@ OperCommand::OperCommand() : Command()
 
 OperCommand::~OperCommand()
 {
-}
-
-OperCommand::OperCommand(OperCommand const &copy)
-{
-	_msg = copy._msg;
-}
-
-OperCommand	&OperCommand::operator=(OperCommand const &ref)
-{
-	_msg = ref._msg;
-	return (*this);
 }

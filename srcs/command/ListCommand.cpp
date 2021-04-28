@@ -4,6 +4,8 @@ void ListCommand::run(IrcServer &irc)
 {
     const int param_size = _msg.get_param_size();
 
+	if (irc.get_current_socket()->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
 	if (irc.get_current_socket()->get_type() == CLIENT)
 	{
 		if (param_size == 0)
@@ -47,6 +49,8 @@ void ListCommand::run(IrcServer &irc)
 		else
 			irc.send_msg(irc.get_server(_msg.get_param(1))->get_socket()->get_fd(), _msg.get_msg());
 	}
+	if (irc.get_current_socket()->get_type() == UNKNOWN)
+		throw(Reply(ERR::NOTREGISTERED()));
 }
 
 void ListCommand::print_list(IrcServer &irc)
@@ -90,5 +94,9 @@ void ListCommand::print_list(IrcServer &irc, std::string *channel_list, int spli
 }
 
 ListCommand::ListCommand(): Command()
+{
+}
+
+ListCommand::~ListCommand()
 {
 }

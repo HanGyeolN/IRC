@@ -1,5 +1,4 @@
 #include "TraceCommand.hpp"
-#include "ft_irc.hpp"
 
 /*
    Command: TRACE
@@ -168,7 +167,7 @@ void	TraceCommand::run(IrcServer &irc)
 	{
 		if (_msg.get_param_size() > 1)
 			throw (Reply(ERR::NEEDMOREPARAMS(), _msg.get_command()));
-		if (_msg.get_param_size() == 0) // 직접 연결되어 있는 서버를 알려줌
+		if (_msg.get_param_size() == 0 || _msg.get_param(0) == irc.get_serverinfo().SERVER_NAME) // 직접 연결되어 있는 서버를 알려줌
 			send_connected_server_to_socket(irc, socket);
 		else // "<server>"가 지정한 대상이 실제 서버 인 경우 대상 서버는 연결된 모든 서버 및 사용자를보고해야합니다.
 		{
@@ -193,10 +192,8 @@ void	TraceCommand::run(IrcServer &irc)
 			socket->write(Reply(RPL::TRACELINK(), irc.get_serverinfo().VERSION, target_server_name, find_next_server(irc, target_server_name)->get_name()).get_msg().c_str());
 		}
 	}
-	else
-	{
-		return ;
-	}
+	else if (socket->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
 }
 
 TraceCommand::TraceCommand() : Command()
@@ -205,15 +202,4 @@ TraceCommand::TraceCommand() : Command()
 
 TraceCommand::~TraceCommand()
 {
-}
-
-TraceCommand::TraceCommand(TraceCommand const &copy)
-{
-	_msg = copy._msg;
-}
-
-TraceCommand	&TraceCommand::operator=(TraceCommand const &ref)
-{
-	_msg = ref._msg;
-	return (*this);
 }

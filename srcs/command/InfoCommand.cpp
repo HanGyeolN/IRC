@@ -34,12 +34,16 @@ void InfoCommand::run(IrcServer &irc)
 	std::string         ret;
 
 	socket = irc.get_current_socket();
+	if (socket->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
 	si = irc.get_serverinfo();
 	member = irc.find_member(socket->get_fd());
 	ret = si.SERVER_NAME + " VERSION: " + si.VERSION;
+	if (socket->get_type() == UNKNOWN)
+		throw(Reply(ERR::NOTREGISTERED()));
 	if (socket->get_type() == CLIENT)
 	{
-		if (_msg.get_param_size() == 0)
+		if (_msg.get_param_size() == 0 || _msg.get_param(0) == irc.get_serverinfo().SERVER_NAME)
 		{
 			socket->write(Reply(RPL::INFO(), ret).get_msg().c_str());
 			socket->write(Reply(RPL::ENDOFINFO()).get_msg().c_str());
@@ -67,9 +71,18 @@ void InfoCommand::run(IrcServer &irc)
 			socket->write(Reply(RPL::INFO(), ret).get_msg().c_str());
 			socket->write(Reply(RPL::ENDOFINFO()).get_msg().c_str());
 		}
+		else
+		{
+			int server_fd = irc.find_server_fd(_msg.get_param(0));
+			irc.get_socket_set().find_socket(server_fd)->write(_msg.get_msg());
+		}
 	}
 }
 
 InfoCommand::InfoCommand(): Command()
+{
+}
+
+InfoCommand::~InfoCommand()
 {
 }

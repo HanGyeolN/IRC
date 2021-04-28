@@ -1,5 +1,4 @@
 #include "ServerCommand.hpp"
-#include "ft_irc.hpp"
 
 /*
 	Command: SERVER
@@ -48,8 +47,6 @@ void	ServerCommand::run(IrcServer &irc)
 	{
 		throw (Reply(ERR::UNKNOWNCOMMAND(), "SERVER"));
 	}
-	if (irc.get_server(_msg.get_param(0)) != false)
-		throw (Reply(ERR::ALREADYREGISTRED()));
 	if (socket->get_type() == UNKNOWN) // 새로운 서버 추가요청을 받은경우 (패스워드 확인 필요)
 	{
 		// int hopcount = ft::atoi(_msg.get_param(1).c_str());
@@ -79,20 +76,15 @@ void	ServerCommand::run(IrcServer &irc)
 			
 			ss.change_socket_type(_msg.get_source_fd(), SERVER); // 3. 소켓 타입 변경
 			irc.send_map_data(socket->get_fd()); // 4. 맵 데이터 전송
-			std::cout << "1\n";
 			irc.send_user_data(socket->get_fd()); // 5. 유저 데이터 전송
-			std::cout << "2\n";
+			irc.send_channel_data(socket->get_fd()); // 5.5 채널 데이터 전송
 			irc.add_server(_msg.get_param(0), _msg.get_param(1), token, _msg.get_param(2), socket); // 6. _global_server에 추가
-			std::cout << "3\n";
 			int hopcount = ft::atoi(_msg.get_param(1).c_str());
 			hopcount++;
-			std::cout << "4\n";
 			_msg.set_param_at(1, ft::itos(hopcount));
 			_msg.set_param_at(3, _msg.get_param(2));
 			_msg.set_param_at(2, ft::itos(token));
-			std::cout << "5\n";
 			irc.send_msg_server(socket->get_fd(), _msg.get_msg()); // 7. 다른 서버에 메세지 전파
-			std::cout << "6\n";
 		}
 		else
 		{
@@ -115,7 +107,6 @@ void	ServerCommand::run(IrcServer &irc)
 		int hopcount = ft::atoi(_msg.get_param(1).c_str());
 		hopcount++;
 		_msg.set_param_at(1, ft::itos(hopcount));
-		
 		irc.send_msg_server(socket->get_fd(), _msg.get_msg());
 	}
 }
@@ -126,15 +117,4 @@ ServerCommand::ServerCommand() : Command()
 
 ServerCommand::~ServerCommand()
 {
-}
-
-ServerCommand::ServerCommand(ServerCommand const &copy)
-{
-	_msg = copy._msg;
-}
-
-ServerCommand	&ServerCommand::operator=(ServerCommand const &ref)
-{
-	_msg = ref._msg;
-	return (*this);
 }

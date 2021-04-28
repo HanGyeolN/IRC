@@ -1,5 +1,4 @@
 # include "ModeCommand.hpp"
-#include "ft_irc.hpp"
 
 ModeCommand::ModeCommand() : _param_idx(2)
 {}
@@ -27,10 +26,8 @@ void		ModeCommand::check_target(IrcServer &irc)
 
 	set.mode = PLUS;
 	set.is_set = true;
-	if (_msg.get_param_size() < 2) {
-		result = ":" + si.SERVER_NAME + " " + Reply(ERR::NEEDMOREPARAMS(), _msg.get_command()).get_msg();
-		return (irc.get_current_socket()->write(result.c_str()));
-	}
+	if (_msg.get_param_size() < 2)
+		throw (Reply(ERR::NEEDMOREPARAMS(), _msg.get_command()));
 	param = _msg.get_param(1);
 	if (param.at(0) == ':')
 		param = param.substr(1);
@@ -46,17 +43,9 @@ void		ModeCommand::check_target(IrcServer &irc)
 		if (_msg.get_prefix().empty() && sender)
 		{
 			if (channel->is_member(sender) == false)
-			{
-				msg = Reply(ERR::NOTONCHANNEL(), channel->get_name()).get_msg();
-				irc.get_current_socket()->write(msg.c_str());
-				return ;
-			}
+				throw (Reply(ERR::NOTONCHANNEL(), channel->get_name()));
 			if (channel->is_operator(sender) == false)
-			{
-				msg = Reply(ERR::CHANOPRIVSNEEDED(), channel->get_name()).get_msg();
-				irc.get_current_socket()->write(msg.c_str());
-				return ;
-			}
+				throw (Reply(ERR::CHANOPRIVSNEEDED(), channel->get_name()));
 		}
 		_param_idx = 2;
 		for (int i = 0; i < param.length(); i++)
@@ -95,11 +84,7 @@ void		ModeCommand::check_target(IrcServer &irc)
 		if (_msg.get_prefix().empty() && sender)
 		{
 			if (sender->get_nick() != _msg.get_param(0))
-			{
-				msg = Reply(ERR::USERSDONTMATCH()).get_msg();
-				irc.get_current_socket()->write(msg.c_str());
-				return ;
-			}
+				throw (Reply(ERR::USERSDONTMATCH()));
 		}
 		for (int i = 0; i < param.length(); i++)
 		{
@@ -409,6 +394,7 @@ std::string	ModeCommand::parse_chan_mode(Channel *channel, IrcServer &irc, char 
 		{
 			std::string		key = _msg.get_param(_param_idx);
 			result += not_check_mode(channel, mode, set, 1);
+			channel->set_key(key);
 		}
 	}
 	else
@@ -459,10 +445,7 @@ void	ModeCommand::run(IrcServer &irc)
 	// _msg의 param을 분석해야 함
 	// - + 중복 허용됨
 	if (irc.get_current_socket()->get_type() == UNKNOWN)
-	{
-		// error msg
-		irc.get_current_socket()->write(Reply(ERR::NOTREGISTERED()).get_msg().c_str());
-	}
+		throw(Reply(ERR::NOTREGISTERED()));
 	else
 	{
 		// 채널인지 유저인지 확인

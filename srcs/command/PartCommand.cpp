@@ -1,6 +1,4 @@
 #include "PartCommand.hpp"
-#include "ft_irc.hpp"
-#include "Reply.hpp"
 
 void	PartCommand::run(IrcServer &irc)
 {
@@ -61,10 +59,8 @@ void	PartCommand::run(IrcServer &irc)
 			}
 		}
 	}
-	else
-	{
-		return ;
-	}
+	else if (socket->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
 }
 
 PartCommand::PartCommand() : Command()
@@ -73,15 +69,4 @@ PartCommand::PartCommand() : Command()
 
 PartCommand::~PartCommand()
 {
-}
-
-PartCommand::PartCommand(PartCommand const &copy)
-{
-	_msg = copy._msg;
-}
-
-PartCommand	&PartCommand::operator=(PartCommand const &ref)
-{
-	_msg = ref._msg;
-	return (*this);
 }

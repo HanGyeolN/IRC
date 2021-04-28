@@ -4,6 +4,8 @@ void AwayCommand::run(IrcServer &irc)
 {
     Socket * socket = irc.get_current_socket();
 
+	if (socket->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
     if (socket->get_type() == CLIENT)
     {
         Member * member = irc.find_member(socket->get_fd());
@@ -33,8 +35,14 @@ void AwayCommand::run(IrcServer &irc)
         }
         irc.send_msg_server(socket->get_fd(), _msg.get_msg());
     }
+    if (socket->get_type() == UNKNOWN)
+		throw(Reply(ERR::NOTREGISTERED()));
 }
 
 AwayCommand::AwayCommand(): Command()
+{
+}
+
+AwayCommand::~AwayCommand()
 {
 }

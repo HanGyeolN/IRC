@@ -1,5 +1,4 @@
 #include "InviteCommand.hpp"
-#include "ft_irc.hpp"
 
 /*
 	INVITE 메시지는 사용자를 채널에 초대하는 데 사용됩니다. 
@@ -44,6 +43,8 @@ void	InviteCommand::run(IrcServer &irc)
 	Channel	*channel;
 
 	socket = irc.get_current_socket();
+	if (socket->get_type() == UNKNOWN)
+		throw (Reply(ERR::NOTREGISTERED()));
 	if (socket->get_type() == CLIENT)
 	{
 		if (_msg.get_param_size() < 2)
@@ -86,10 +87,8 @@ void	InviteCommand::run(IrcServer &irc)
 		// 다른 서버에 메세지 전파
 		irc.send_msg_server(socket->get_fd(), _msg.get_msg());
 	}
-	else
-	{
-		return ;
-	}
+	else if (socket->get_type() == UNKNOWN)
+		throw(Reply(ERR::NOTREGISTERED()));
 }
 
 InviteCommand::InviteCommand() : Command()
@@ -98,15 +97,4 @@ InviteCommand::InviteCommand() : Command()
 
 InviteCommand::~InviteCommand()
 {
-}
-
-InviteCommand::InviteCommand(InviteCommand const &copy)
-{
-	_msg = copy._msg;
-}
-
-InviteCommand	&InviteCommand::operator=(InviteCommand const &ref)
-{
-	_msg = ref._msg;
-	return (*this);
 }
