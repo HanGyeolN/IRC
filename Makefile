@@ -24,7 +24,7 @@ NAME = ircserv
 
 CXX = clang++
 
-CXXFLAGS = -std=c++98 -I ${INC_DIR} -I ${INC_DIR2} -g -fsanitize=address -I ${SSL_DIR} -pthread -lpthread -ldl
+CXXFLAGS = -std=c++98 -I ${INC_DIR} -I ${INC_DIR2} -g -fsanitize=address -I ${SSL_DIR} -pthread
 
 SSL_DIR = ./ssl
 INC_DIR = ./includes

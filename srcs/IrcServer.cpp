@@ -409,7 +409,7 @@ SocketSet	&IrcServer::get_socket_set()
 
 void	IrcServer::check_connection()
 {
-	std::vector<Socket *>	connects = _socket_set.get_connect_sockets();
+	std::vector<Socket *>	&connects = _socket_set.get_connect_sockets();
 	std::vector<Socket *>::iterator	begin = connects.begin();
 	std::vector<Socket *>::iterator	end = connects.end();
 
