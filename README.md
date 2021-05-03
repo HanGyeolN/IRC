@@ -1,6 +1,5 @@
 # IRC
 
-[irc.pdf](IRC%205fae9137bc9947c1857ecd4b229a1f3d/irc.pdf)
 
 - RFC
 
@@ -29,10 +28,6 @@
     [RFC 2813](https://www.notion.so/RFC-2813-cfaec233fc5f46f0996c71f54164f4bf)
 
     [RFC 7194](https://www.notion.so/RFC-7194-eddc2e0873a74616bafd6b8709977982)
-
-    [RFC_2810.pdf](IRC%205fae9137bc9947c1857ecd4b229a1f3d/RFC_2810.pdf)
-
-    [RFC2813_kr.pdf](IRC%205fae9137bc9947c1857ecd4b229a1f3d/RFC2813_kr.pdf)
 
 요구사항
 
