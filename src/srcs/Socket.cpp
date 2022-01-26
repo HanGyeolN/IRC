@@ -17,7 +17,7 @@ Socket::Socket(const char *port) : _recv_bytes(0), _sent_bytes(0), _recv_cnt(0),
 	_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_fd == -1)
 		throw (Error("socket construct error"));
-	setsockopt(_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+	setsockopt(_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
 	memset(&_addr, 0, sizeof(_addr));
 	_addr.sin_family = AF_INET;
 	_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
@@ -31,7 +31,7 @@ Socket::Socket(unsigned short port) : _recv_bytes(0), _sent_bytes(0), _recv_cnt(
 	int	set = 1;
 
 	_fd = socket(AF_INET, SOCK_STREAM, 0);
-	setsockopt(_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+	setsockopt(_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
 	if (fcntl(_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw(Error("fcntl returned -1"));
 	memset(&_addr, 0, sizeof(_addr));
@@ -47,7 +47,7 @@ Socket::Socket(struct sockaddr_in serv_addr) : _recv_bytes(0), _sent_bytes(0), _
 	int	set = 1;
 
 	_fd = socket(AF_INET, SOCK_STREAM, 0);
-	setsockopt(_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+	setsockopt(_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
 	memset(&_addr, 0, sizeof(_addr));
 	_addr = serv_addr;
 	time(&_start_time);
@@ -159,7 +159,7 @@ Socket *Socket::accept() const
 	// copy
 	new_socket = new Socket();
 	new_socket->_fd = client_sock;
-	setsockopt(_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+	setsockopt(_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
 	if (fcntl(new_socket->_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw(Error("fcntl returned -1"));
 	memcpy(&new_socket->_addr, &client_addr, clnt_addr_size);
