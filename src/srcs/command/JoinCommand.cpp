@@ -127,7 +127,6 @@ void	JoinCommand::run(IrcServer &irc)
 	int				number_of_channel;
 	int				number_of_key;
 	std::string		*channel_names = 0;
-	std::string		*channel_keys = 0;
 	Socket			*socket;
 	Member			*member;
 
@@ -139,19 +138,12 @@ void	JoinCommand::run(IrcServer &irc)
 		if ((_msg.get_param(0)[0] != '&') && (_msg.get_param(0)[0] != '#') && (_msg.get_param(0)[0] != '+'))
 			throw (Reply(ERR::NOSUCHCHANNEL(), _msg.get_param(0)));
 		number_of_channel = ft::split(_msg.get_param(0), ',', channel_names);
-		if (_msg.get_param_size() == 2)
-			number_of_key = ft::split(_msg.get_param(1), ',', channel_keys);
 		member = irc.find_member(socket->get_fd());
 		for (int i = 0; i < number_of_channel; i++)
 		{
-			if (i < number_of_key)
-				join(irc, member, channel_names[i], channel_keys[i]);
-			else
-				join(irc, member, channel_names[i]);
+			join(irc, member, channel_names[i]);
 		}
 		delete[] channel_names;
-		if (channel_keys)
-			delete[] channel_keys;
 	}
 	else if (socket->get_type() == SERVER)
 	{

@@ -11,6 +11,7 @@
 #include <netdb.h>
 #include <map>
 #include <ctime>
+#include <signal.h>
 
 #include "Socket.hpp"
 #include "SocketSet.hpp"
