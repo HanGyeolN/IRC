@@ -34,11 +34,7 @@ SSL_Socket  *SSL_Socket::accept(SSL_CTX *ctx)
 	if (fd <= 0)
 		throw (Error("SSL Socket accept error"));
 	accepted_socket = new SSL_Socket(ctx);
-<<<<<<< HEAD:src/srcs/SSL_Socket.cpp
-	setsockopt(_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
-=======
 	setsockopt(_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
->>>>>>> master:srcs/SSL_Socket.cpp
 	accepted_socket->_fd = fd;
 	memcpy(&(accepted_socket->_addr), &accepted_addr, addr_size);
 	SSL_set_fd(accepted_socket->_ssl, accepted_socket->_fd);
@@ -74,13 +70,8 @@ SSL_Socket	*SSL_Socket::connect(const char *connect_srv, SSL_CTX *ctx)
 	connect_socket->_fd = socket(AF_INET, SOCK_STREAM, 0);
 	connect_socket->_addr = connect_addr;
 	connect_socket->set_pass(pair.second);
-<<<<<<< HEAD:src/srcs/SSL_Socket.cpp
-	setsockopt(connect_socket->_fd, SOL_SOCKET, MSG_NOSIGNAL, (void *)&set, sizeof(int));
-    	SSL_set_fd(connect_socket->_ssl, connect_socket->_fd);
-=======
 	setsockopt(connect_socket->_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
     SSL_set_fd(connect_socket->_ssl, connect_socket->_fd);
->>>>>>> master:srcs/SSL_Socket.cpp
 	if (connect_socket->_fd == -1)
 		throw(Error("connect socket create error"));
 	if (::connect(connect_socket->_fd, (struct sockaddr *)&connect_socket->_addr, sizeof(connect_socket->_addr)) == -1)

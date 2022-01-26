@@ -22,8 +22,4 @@ int main(int argc, char **argv)
 	{
 		std::cerr << e.what() << '\n';
 	}
-<<<<<<< HEAD:src/srcs/main.cpp
 }
-=======
-}
->>>>>>> master:srcs/main.cpp

@@ -42,13 +42,7 @@ $(NAME) : $(OBJS)
 	@echo "${_GREEN}COMPILE COMPLETE${_END}"
 
 %.o : %.cpp
-<<<<<<< HEAD:src/Makefile
 	@echo "${_GREEN}Compiling...${_END}"
-=======
-	@printf "${_GREEN}"
-	@$(ECHO) Compiling $@
-	@printf "${_END}"
->>>>>>> master:Makefile
 	@$(CXX) -o $@ -c $^ $(CXXFLAGS)
 
 all : $(NAME)
@@ -69,7 +63,3 @@ bonus :
 
 re : fclean all
 
-<<<<<<< HEAD:src/Makefile
-=======
-endif
->>>>>>> master:Makefile
