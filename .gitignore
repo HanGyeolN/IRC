@@ -1,9 +1,7 @@
 *.o
 server
+ircserv
 server.dYSM
 a.out
 .vscode
 .DS_Store
-nohup.out
-ft_irc.conf
-connect.sh

@@ -26,7 +26,6 @@ void WhoisQuery::run(IrcServer &irc)
         if ((server = irc.get_server(_msg.get_param(0))) == NULL)
 			throw (Reply(ERR::NOSUCHSERVER(), _msg.get_param(0)));
     }
-    socket = irc.get_current_socket();
     for (int i = 0; i < split_size; ++i)
     {
         first = irc.get_global_user().begin();
